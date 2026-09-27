@@ -6,298 +6,38 @@
 <meta name="theme-color" content="#020b14">
 <title>いちみず会｜関連サイトポータル</title>
 <meta name="description" content="いちみず会の関連サイトへアクセスするビジュアルポータル">
-
-<!-- 新規追加：デスクトップ用ロゴ説明 -->
 <link rel="stylesheet" href="assets/portal-tooltips.css">
-
 <style>
-  :root {
-    --bg: #020b14;
-    --ease: cubic-bezier(.2,.8,.2,1);
-  }
-  * { box-sizing: border-box; }
-  html, body { margin:0; min-height:100%; background:var(--bg); }
-  body {
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif;
-    overflow:hidden;
-  }
-  .scene {
-    position:relative;
-    width:100vw;
-    height:100dvh;
-    background:
-      center/cover no-repeat url("assets/background-desktop.png");
-    isolation:isolate;
-  }
-  .scene::after {
-    content:"";
-    position:absolute;
-    inset:0;
-    background:radial-gradient(circle at center, transparent 34%, rgba(0,0,0,.22) 100%);
-    pointer-events:none;
-    z-index:0;
-  }
-  .logo-btn {
-    position:absolute;
-    z-index:2;
-    display:grid;
-    place-items:center;
-    width:clamp(110px, 13vw, 205px);
-    aspect-ratio:1;
-    border:0;
-    padding:0;
-    background:transparent;
-    cursor:pointer;
-    border-radius:50%;
-    transform:translate(-50%,-50%);
-    transition:
-      transform .22s var(--ease),
-      filter .22s var(--ease),
-      opacity .22s var(--ease);
-    -webkit-tap-highlight-color:transparent;
-  }
-  .logo-btn img {
-    width:100%;
-    height:100%;
-    object-fit:contain;
-    display:block;
-    filter:drop-shadow(0 8px 16px rgba(0,0,0,.45));
-    transition:
-      transform .22s var(--ease),
-      filter .22s var(--ease);
-  }
-  .logo-btn::before {
-    content:"";
-    position:absolute;
-    inset:5%;
-    border-radius:50%;
-    background:radial-gradient(circle, rgba(80,215,255,.22), rgba(80,215,255,0) 68%);
-    opacity:0;
-    transform:scale(.75);
-    transition:.22s var(--ease);
-    z-index:-1;
-  }
-  .logo-btn:hover,
-  .logo-btn:focus-visible {
-    transform:translate(-50%,-50%) scale(1.08);
-    outline:none;
-  }
-  .logo-btn:hover img,
-  .logo-btn:focus-visible img {
-    filter:
-      brightness(1.14)
-      drop-shadow(0 0 10px rgba(110,225,255,.9))
-      drop-shadow(0 0 28px rgba(40,170,255,.65));
-  }
-  .logo-btn:hover::before,
-  .logo-btn:focus-visible::before {
-    opacity:1;
-    transform:scale(1.35);
-  }
-
-  /* Desktop placement */
-  .ichimizu { left:20%; top:27%; }
-  .hub      { left:50%; top:23%; }
-  .overseas { left:80%; top:27%; }
-  .daily    { left:24%; top:72%; }
-  .portal   { left:50%; top:59%; width:clamp(128px, 14.5vw, 230px); }
-  .statistics { left:76%; top:72%; }
-
-  .scrim {
-    position:fixed;
-    inset:0;
-    z-index:30;
-    pointer-events:none;
-    background:rgba(0,0,0,0);
-    transition:background .34s var(--ease);
-  }
-
-  body.selecting .scrim {
-    background:rgba(0,0,0,.88);
-  }
-  body.selecting .logo-btn {
-    opacity:.055;
-    pointer-events:none;
-  }
-  body.selecting .logo-btn.selected {
-    opacity:1;
-    z-index:40;
-    transform:translate(-50%,-50%) scale(1.48);
-  }
-  body.selecting .logo-btn.selected img {
-    filter:
-      brightness(1.3)
-      saturate(1.18)
-      drop-shadow(0 0 14px rgba(255,255,255,.95))
-      drop-shadow(0 0 32px rgba(95,220,255,.95))
-      drop-shadow(0 0 70px rgba(40,140,255,.75));
-    animation:pulseGlow .62s ease both;
-  }
-  body.selecting .logo-btn.selected::before {
-    opacity:1;
-    transform:scale(1.8);
-    background:radial-gradient(circle, rgba(120,235,255,.32), rgba(50,160,255,.12) 45%, transparent 72%);
-  }
-  @keyframes pulseGlow {
-    0%   { transform:scale(1); }
-    45%  { transform:scale(1.10); }
-    100% { transform:scale(1.04); }
-  }
-
-  .hint {
-    position:absolute;
-    z-index:3;
-    left:50%;
-    bottom:max(14px, env(safe-area-inset-bottom));
-    transform:translateX(-50%);
-    color:rgba(255,255,255,.82);
-    background:rgba(0,8,16,.55);
-    border:1px solid rgba(255,255,255,.14);
-    padding:.65em .9em;
-    border-radius:999px;
-    font-size:clamp(11px,1vw,14px);
-    line-height:1;
-    backdrop-filter:blur(8px);
-    animation:fadeHint .6s ease 4s forwards;
-    white-space:nowrap;
-  }
-  @keyframes fadeHint {
-    to { opacity:0; transform:translate(-50%,8px); }
-  }
-
-  @media (max-width: 760px), (orientation: portrait) {
-    body { overflow:auto; }
-    .scene {
-      min-height:100svh;
-      height:100dvh;
-      background-image:url("assets/background-mobile.png");
-      background-position:center top;
-    }
-    .logo-btn {
-      width:clamp(88px, 24vw, 138px);
-    }
-    .portal { width:clamp(102px, 27vw, 150px); }
-
-    .portal     { left:50%; top:15%; }
-    .ichimizu   { left:50%; top:33%; }
-    .hub        { left:50%; top:49%; }
-    .overseas   { left:50%; top:65%; }
-    .daily      { left:28%; top:83%; width:clamp(78px, 21vw, 120px); }
-    .statistics { left:72%; top:83%; width:clamp(78px, 21vw, 120px); }
-
-    body.selecting .logo-btn.selected {
-      transform:translate(-50%,-50%) scale(1.62);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .logo-btn, .logo-btn img, .logo-btn::before, .scrim, .hint {
-      transition:none !important;
-      animation:none !important;
-    }
-  }
+:root{--bg:#020b14;--ease:cubic-bezier(.2,.8,.2,1)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg)}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif;overflow:hidden}
+.scene{position:relative;width:100vw;height:100dvh;background:center/cover no-repeat url("assets/background-desktop.png");isolation:isolate}.scene::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at center,transparent 34%,rgba(0,0,0,.22) 100%);pointer-events:none;z-index:0}
+.logo-btn{position:absolute;z-index:2;display:grid;place-items:center;width:clamp(110px,13vw,205px);aspect-ratio:1;border:0;padding:0;background:transparent;cursor:pointer;border-radius:50%;transform:translate(-50%,-50%);transition:transform .22s var(--ease),filter .22s var(--ease),opacity .22s var(--ease);-webkit-tap-highlight-color:transparent}
+.logo-btn img{width:100%;height:100%;object-fit:contain;display:block;filter:drop-shadow(0 8px 16px rgba(0,0,0,.45));transition:transform .22s var(--ease),filter .22s var(--ease)}
+.logo-btn::before{content:"";position:absolute;inset:5%;border-radius:50%;background:radial-gradient(circle,rgba(80,215,255,.22),rgba(80,215,255,0) 68%);opacity:0;transform:scale(.75);transition:.22s var(--ease);z-index:-1}
+.logo-btn:hover,.logo-btn:focus-visible{transform:translate(-50%,-50%) scale(1.08);outline:none}.logo-btn:hover img,.logo-btn:focus-visible img{filter:brightness(1.14) drop-shadow(0 0 10px rgba(110,225,255,.9)) drop-shadow(0 0 28px rgba(40,170,255,.65))}.logo-btn:hover::before,.logo-btn:focus-visible::before{opacity:1;transform:scale(1.35)}
+/* 7ロゴのバランス：上段3・中央Portal・下段3 */
+.ichimizu{left:20%;top:24%}.hub{left:50%;top:20%}.overseas{left:80%;top:24%}.portal{left:50%;top:50%;width:clamp(128px,14.5vw,230px)}.daily{left:20%;top:76%}.design{left:50%;top:80%;width:clamp(118px,13.5vw,215px)}.statistics{left:80%;top:76%}
+.design img{clip-path:polygon(50% 1%,66% 21%,96% 21%,79% 48%,97% 71%,67% 84%,50% 99%,33% 84%,3% 71%,21% 48%,4% 21%,34% 21%)}
+.scrim{position:fixed;inset:0;z-index:30;pointer-events:none;background:rgba(0,0,0,0);transition:background .34s var(--ease)}body.selecting .scrim{background:rgba(0,0,0,.88)}body.selecting .logo-btn{opacity:.055;pointer-events:none}body.selecting .logo-btn.selected{opacity:1;z-index:40;transform:translate(-50%,-50%) scale(1.48)}body.selecting .logo-btn.selected img{filter:brightness(1.3) saturate(1.18) drop-shadow(0 0 14px rgba(255,255,255,.95)) drop-shadow(0 0 32px rgba(95,220,255,.95)) drop-shadow(0 0 70px rgba(40,140,255,.75));animation:pulseGlow .62s ease both}body.selecting .logo-btn.selected::before{opacity:1;transform:scale(1.8);background:radial-gradient(circle,rgba(120,235,255,.32),rgba(50,160,255,.12) 45%,transparent 72%)}
+@keyframes pulseGlow{0%{transform:scale(1)}45%{transform:scale(1.10)}100%{transform:scale(1.04)}}
+.hint{position:absolute;z-index:3;left:50%;bottom:max(14px,env(safe-area-inset-bottom));transform:translateX(-50%);color:rgba(255,255,255,.82);background:rgba(0,8,16,.55);border:1px solid rgba(255,255,255,.14);padding:.65em .9em;border-radius:999px;font-size:clamp(11px,1vw,14px);line-height:1;backdrop-filter:blur(8px);animation:fadeHint .6s ease 4s forwards;white-space:nowrap}@keyframes fadeHint{to{opacity:0;transform:translate(-50%,8px)}}
+@media(max-width:760px),(orientation:portrait){body{overflow:auto}.scene{min-height:100svh;height:100dvh;background-image:url("assets/background-mobile.png");background-position:center top}.logo-btn{width:clamp(80px,21vw,122px)}.portal{width:clamp(94px,24vw,138px)}.design{width:clamp(82px,22vw,126px)}.portal{left:50%;top:11%}.ichimizu{left:50%;top:25%}.hub{left:50%;top:39%}.overseas{left:50%;top:53%}.design{left:50%;top:67%}.daily{left:28%;top:84%;width:clamp(72px,19vw,108px)}.statistics{left:72%;top:84%;width:clamp(72px,19vw,108px)}body.selecting .logo-btn.selected{transform:translate(-50%,-50%) scale(1.62)}}
+@media(prefers-reduced-motion:reduce){.logo-btn,.logo-btn img,.logo-btn::before,.scrim,.hint{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
 <div class="scene" aria-label="いちみず会関連サイト ポータル">
-
-  <a class="logo-btn ichimizu tooltip-bottom"
-     href="https://sites.google.com/view/ichimizu-crime-prevention/home"
-     aria-label="いちみず会HPを開く">
-    <img src="assets/ichimizu.png" alt="いちみず会">
-    <span class="site-tooltip" role="tooltip">
-      <strong>いちみず会HP</strong>
-      <span>勉強会の案内・活動報告を掲載。<br>実務家と研究をつなぐ入口。</span>
-    </span>
-  </a>
-
-  <a class="logo-btn hub tooltip-bottom"
-     href="https://ebp2ichimizu-cell.github.io/ichimizu-research-hub-github/#/"
-     aria-label="研究ハブを開く">
-    <img src="assets/hub.png" alt="研究ハブ">
-    <span class="site-tooltip" role="tooltip">
-      <strong>研究HUB</strong>
-      <span>国内の警察EBP・犯罪予防研究を整理。<br>実務の疑問から研究へつなぐ。</span>
-    </span>
-  </a>
-
-  <a class="logo-btn overseas tooltip-bottom"
-     href="https://ebp2ichimizu-cell.github.io/Ichimizu-portal/beta-overseas-ebp.html"
-     aria-label="海外EBPナビを開く">
-    <img src="assets/overseas.png" alt="海外EBPナビ">
-    <span class="site-tooltip" role="tooltip">
-      <strong>海外EBPナビ</strong>
-      <span>海外の実務ガイド・研究・事例を案内。<br>日本の現場で考えるための入口。</span>
-    </span>
-  </a>
-
-  <a class="logo-btn daily"
-     href="https://ebp-daily-brief.grassy-wasp-8750.chatgpt.site/"
-     aria-label="Daily Briefを開く">
-    <img src="assets/daily.png" alt="Daily Brief">
-    <span class="site-tooltip" role="tooltip">
-      <strong>Daily Brief</strong>
-      <span>国内外の重要情報を実務家向けに要約。<br>短時間で知見を把握。</span>
-    </span>
-  </a>
-
-  <a class="logo-btn portal"
-     href="https://ebp2ichimizu-cell.github.io/Ichimizu-portal/"
-     aria-label="いちみず会ポータルを開く">
-    <img src="assets/portal.png" alt="Portal Site">
-    <span class="site-tooltip" role="tooltip">
-      <strong>いちみず会ポータル</strong>
-      <span>関連サイトをひとつに束ねる案内図。<br>知りたい情報へスムーズにつなぐ。</span>
-    </span>
-  </a>
-
-  <a class="logo-btn statistics"
-     href="https://ebp-stat-training.grassy-wasp-8750.chatgpt.site/"
-     aria-label="統計演習を開く">
-    <img src="assets/statistics.png" alt="Statistics">
-    <span class="site-tooltip" role="tooltip">
-      <strong>統計演習</strong>
-      <span>EBPに必要な統計と実務問題を学ぶ。<br>知識と演習で実践につなぐ。</span>
-    </span>
-  </a>
-
-  <div class="hint">ロゴを選択</div>
+<a class="logo-btn ichimizu tooltip-bottom" href="https://sites.google.com/view/ichimizu-crime-prevention/home" aria-label="いちみず会HPを開く"><img src="assets/ichimizu.png" alt="いちみず会"><span class="site-tooltip" role="tooltip"><strong>いちみず会HP</strong><span>勉強会の案内・活動報告を掲載。<br>実務家と研究をつなぐ入口。</span></span></a>
+<a class="logo-btn hub tooltip-bottom" href="https://ebp2ichimizu-cell.github.io/ichimizu-research-hub-github/#/" aria-label="研究ハブを開く"><img src="assets/hub.png" alt="研究ハブ"><span class="site-tooltip" role="tooltip"><strong>研究HUB</strong><span>国内の警察EBP・犯罪予防研究を整理。<br>実務の疑問から研究へつなぐ。</span></span></a>
+<a class="logo-btn overseas tooltip-bottom" href="https://ebp2ichimizu-cell.github.io/Ichimizu-portal/beta-overseas-ebp.html" aria-label="海外EBPナビを開く"><img src="assets/overseas.png" alt="海外EBPナビ"><span class="site-tooltip" role="tooltip"><strong>海外EBPナビ</strong><span>海外の実務ガイド・研究・事例を案内。<br>日本の現場で考えるための入口。</span></span></a>
+<a class="logo-btn daily tooltip-top" href="https://ebp-daily-brief.grassy-wasp-8750.chatgpt.site/" aria-label="Daily Briefを開く"><img src="assets/daily.png" alt="Daily Brief"><span class="site-tooltip" role="tooltip"><strong>Daily Brief</strong><span>国内外の重要情報を実務家向けに要約。<br>短時間で知見を把握。</span></span></a>
+<a class="logo-btn portal" href="https://ebp2ichimizu-cell.github.io/Ichimizu-portal/" aria-label="いちみず会ポータルを開く"><img src="assets/portal.png" alt="Portal Site"><span class="site-tooltip" role="tooltip"><strong>いちみず会ポータル</strong><span>関連サイトをひとつに束ねる案内図。<br>知りたい情報へスムーズにつなぐ。</span></span></a>
+<a class="logo-btn design tooltip-top" href="https://ebp2ichimizu-cell.github.io/ichimizu-ebp-design-support/" aria-label="EBP Design Supportを開く"><img src="assets/design-support.jpg" alt="EBP Design Support"><span class="site-tooltip" role="tooltip"><strong>EBP Design Support</strong><span>実務上の課題に対する施策をAIとともに考案・検討するための<br>プロンプト作成を支援。</span></span></a>
+<a class="logo-btn statistics tooltip-top" href="https://ebp-stat-training.grassy-wasp-8750.chatgpt.site/" aria-label="統計演習を開く"><img src="assets/statistics.png" alt="Statistics"><span class="site-tooltip" role="tooltip"><strong>統計演習</strong><span>EBPに必要な統計と実務問題を学ぶ。<br>知識と演習で実践につなぐ。</span></span></a>
+<div class="hint">ロゴを選択</div>
 </div>
-
 <div class="scrim" aria-hidden="true"></div>
-
-<script>
-(() => {
-  const links = [...document.querySelectorAll('.logo-btn')];
-  let navigating = false;
-
-  links.forEach(link => {
-    link.addEventListener('click', (e) => {
-      if (navigating) return;
-      e.preventDefault();
-      navigating = true;
-
-      const destination = link.href;
-      document.body.classList.add('selecting');
-      link.classList.add('selected');
-
-      // Animation first, then navigate.
-      window.setTimeout(() => {
-        window.location.href = destination;
-      }, 620);
-    });
-  });
-
-  // Restore the page if the browser returns from bfcache.
-  window.addEventListener('pageshow', () => {
-    navigating = false;
-    document.body.classList.remove('selecting');
-    links.forEach(link => link.classList.remove('selected'));
-  });
-})();
-</script>
-
+<script>(()=>{const links=[...document.querySelectorAll('.logo-btn')];let navigating=false;links.forEach(link=>{link.addEventListener('click',(e)=>{if(navigating)return;e.preventDefault();navigating=true;const destination=link.href;document.body.classList.add('selecting');link.classList.add('selected');window.setTimeout(()=>{window.location.href=destination},620)})});window.addEventListener('pageshow',()=>{navigating=false;document.body.classList.remove('selecting');links.forEach(link=>link.classList.remove('selected'))})})();</script>
 <script src="./view-switch.js"></script>
-
 </body>
 </html>
