@@ -1,0 +1,132 @@
+/* =========================================================
+   いちみず会 関連サイトポータル
+   Desktop-only logo tooltip
+   ---------------------------------------------------------
+   PCのマウス操作時のみ表示。
+   スマホ・タブレットでは完全に無効化する。
+   ========================================================= */
+
+.site-tooltip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 16px);
+
+  width: 310px;
+  max-width: min(310px, 82vw);
+  padding: 14px 17px;
+
+  transform: translateX(-50%) translateY(8px);
+
+  background: rgba(8, 18, 30, 0.94);
+  color: #fff;
+
+  border: 1px solid rgba(255,255,255,.20);
+  border-radius: 12px;
+
+  box-shadow:
+    0 14px 36px rgba(0,0,0,.42),
+    0 0 18px rgba(70,190,255,.12);
+
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+
+  text-align: left;
+  white-space: normal;
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  transition:
+    opacity .18s ease,
+    transform .18s ease,
+    visibility .18s ease;
+
+  z-index: 20;
+}
+
+/* 吹き出し下側の三角 */
+.site-tooltip::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  transform: translateX(-50%);
+
+  border-width: 7px;
+  border-style: solid;
+  border-color:
+    rgba(8,18,30,.94)
+    transparent
+    transparent
+    transparent;
+}
+
+.site-tooltip strong {
+  display: block;
+  margin: 0 0 5px;
+
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: .025em;
+}
+
+.site-tooltip > span {
+  display: block;
+
+  color: rgba(255,255,255,.88);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.65;
+  letter-spacing: .01em;
+}
+
+/* 上段3サイトは説明をロゴの下に出す */
+.logo-btn.tooltip-bottom .site-tooltip {
+  top: calc(100% + 16px);
+  bottom: auto;
+}
+
+.logo-btn.tooltip-bottom .site-tooltip::after {
+  top: auto;
+  bottom: 100%;
+
+  border-color:
+    transparent
+    transparent
+    rgba(8,18,30,.94)
+    transparent;
+}
+
+/* PC + マウス/トラックパッド環境だけ有効 */
+@media (hover: hover) and (pointer: fine) and (min-width: 900px) {
+  .logo-btn:hover .site-tooltip,
+  .logo-btn:focus-visible .site-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* サイト遷移演出開始後は説明を即座に消す */
+  body.selecting .site-tooltip {
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+}
+
+/* スマホ・タブレットでは完全非表示。
+   タップ1回で従来どおりリンクへ遷移する。 */
+@media (hover: none), (pointer: coarse), (max-width: 899px) {
+  .site-tooltip {
+    display: none !important;
+  }
+}
+
+/* 動きを減らす設定への対応 */
+@media (prefers-reduced-motion: reduce) {
+  .site-tooltip {
+    transition: none !important;
+  }
+}
